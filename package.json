@@ -1,0 +1,116 @@
+{
+    "name": "vscode-terminal-code-runner",
+    "displayName": "Terminal Code Runner",
+    "publisher": "zardoy",
+    "version": "0.0.0-dev",
+    "private": true,
+    "license": "MIT",
+    "categories": [
+        "Other"
+    ],
+    "contributes": {
+        "configuration": {
+            "properties": {
+                "execMap": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "default": {
+                        "js": "tsm $path"
+                    }
+                },
+                "installExecMap": {
+                    "type": "object",
+                    "deprecationMessage": "Not implemented",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "default": {
+                        "js": "pnpm i -g tsm || npm i -g tsm"
+                    }
+                },
+                "defaultExec": {
+                    "type": "string",
+                    "default": ""
+                },
+                "terminalCwd": {
+                    "type": "string",
+                    "enum": [
+                        "workspace",
+                        "file"
+                    ],
+                    "default": "workspace"
+                },
+                "focusOnEditor": {
+                    "type": "boolean",
+                    "description": "Focus on editor whenever the file is run instead of terminal",
+                    "default": false
+                },
+                "clearTerminal": {
+                    "type": "boolean",
+                    "default": false
+                },
+                "saveFile": {
+                    "type": "string",
+                    "enum": [
+                        "disabled",
+                        "onlyActive",
+                        "all"
+                    ],
+                    "default": "onlyActive"
+                }
+            }
+        },
+        "commands": [
+            {
+                "command": "runFile",
+                "title": "Run File",
+                "icon": "$(play)"
+            },
+            {
+                "command": "runWithSideCode",
+                "title": "Run with Side Code"
+            }
+        ],
+        "menus": {
+            "editor/title": [
+                {
+                    "when": "terminal-code-runner.runBututon",
+                    "group": "navigation",
+                    "command": "runFile"
+                }
+            ]
+        }
+    },
+    "activationEvents": [
+        "*"
+    ],
+    "capabilities": {
+        "untrustedWorkspaces": {
+            "supported": false,
+            "description": "Running arbirtrary code available only in trusted workspaces"
+        },
+        "virtualWorkspaces": {
+            "supported": false,
+            "description": "This extension requires access to the terminal"
+        }
+    },
+    "scripts": {
+        "start": "vscode-framework start",
+        "lint": "eslint src/**"
+    },
+    "devDependencies": {
+        "@types/node": "^17.0.5",
+        "@types/vscode": "^1.63.1",
+        "@zardoy/tsconfig": "^1.2.2",
+        "eslint": "^8.6.0",
+        "eslint-config-zardoy": "^0.2.4",
+        "typescript": "^4.5.4"
+    },
+    "dependencies": {
+        "ansi-escapes": "^5.0.0",
+        "execa": "^6.0.0",
+        "vscode-framework": "^0.0.18"
+    }
+}
