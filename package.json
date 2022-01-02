@@ -1,5 +1,5 @@
 {
-    "name": "vscode-terminal-code-runner",
+    "name": "terminal-code-runner",
     "displayName": "Terminal Code Runner",
     "publisher": "zardoy",
     "version": "0.0.0-dev",
