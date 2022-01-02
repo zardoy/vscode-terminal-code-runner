@@ -8,4 +8,4 @@ Why this instead of Code Runner:
 - No [Conflict with Output Colorizer](https://github.com/formulahendry/vscode-code-runner/issues/59)
 - [`preserveFocus` just works](https://github.com/formulahendry/vscode-code-runner/issues/715)
 
-Note, this is a rewritten version of Code Runner, there is no default exec maps (only `tsm` for js/ts langs)
+Note, this is a completely different version, there is no default exec maps (only `tsm` for js/ts langs)
