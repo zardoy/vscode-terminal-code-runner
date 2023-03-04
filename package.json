@@ -18,8 +18,8 @@
                         "type": "string"
                     },
                     "default": {
-                        "javascript": "node ${file}",
-                        "typescript": "tsx ${file}"
+                        "javascript": "node ${relativeFile}",
+                        "typescript": "tsx ${relativeFile}"
                     }
                 },
                 "executorMapByGlob": {
