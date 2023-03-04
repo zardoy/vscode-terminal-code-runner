@@ -112,5 +112,15 @@
         "ansi-escapes": "^5.0.0",
         "execa": "^6.0.0",
         "vscode-framework": "^0.0.18"
+    },
+    "prettier": {
+        "semi": false,
+        "singleQuote": true,
+        "proseWrap": "never",
+        "tabWidth": 4,
+        "trailingComma": "all",
+        "arrowParens": "avoid",
+        "printWidth": 160,
+        "endOfLine": "auto"
     }
 }
