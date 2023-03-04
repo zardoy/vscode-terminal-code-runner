@@ -96,6 +96,7 @@
     },
     "scripts": {
         "start": "vscode-framework start",
+        "build": "tsc && vscode-framework build",
         "lint": "eslint src/**"
     },
     "devDependencies": {
@@ -108,5 +109,15 @@
     },
     "dependencies": {
         "vscode-framework": "^0.0.18"
+    },
+    "prettier": {
+        "semi": false,
+        "singleQuote": true,
+        "proseWrap": "never",
+        "tabWidth": 4,
+        "trailingComma": "all",
+        "arrowParens": "avoid",
+        "printWidth": 160,
+        "endOfLine": "auto"
     }
 }
