@@ -68,6 +68,11 @@
                         "all"
                     ],
                     "default": "onlyActive"
+                },
+                "differentTerminalsForEachFile": {
+                    "type": "boolean",
+                    "description": "Uses different terminals for each file",
+                    "default": false
                 }
             }
         },

@@ -31,10 +31,13 @@ export const activate = () => {
         exec = await parseVariables(exec, document.uri)
 
         // Uses different terminals for each file
+        const isDifferentTerminalsForEachFile = getExtensionSetting('differentTerminalsForEachFile')
+        const terminalKey = isDifferentTerminalsForEachFile ? fsPath : '--Reused Terminal--'
+        const terminalName = isDifferentTerminalsForEachFile ? `Runner: ${fileName}` : `Run Code`
         const terminal =
-            activeTerminals.get(fsPath) ??
+            activeTerminals.get(terminalKey) ??
             vscode.window.createTerminal({
-                name: `Runner: ${fileName}`,
+                name: terminalName,
                 cwd: getExtensionSetting('terminalCwd') === 'file' ? fileDir : undefined,
             })
         terminal.show()
@@ -56,7 +59,7 @@ export const activate = () => {
         // clear terminal
         if (getExtensionSetting('clearTerminal')) await vscode.commands.executeCommand('workbench.action.terminal.clear')
 
-        activeTerminals.set(fsPath, terminal)
+        activeTerminals.set(terminalKey, terminal)
     })
 
     vscode.window.onDidCloseTerminal(hiddenTerminal => {
