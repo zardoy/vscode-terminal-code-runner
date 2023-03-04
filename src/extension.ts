@@ -8,10 +8,7 @@ export const activate = () => {
     const activeTerminals = new Map<FsPath, vscode.Terminal>()
 
     const checkDisplayRunButton = (textEditor: vscode.TextEditor | undefined): void => {
-        if (!textEditor || textEditor.viewColumn === undefined) return
-        let hasExec = !!getExtensionSetting('defaultExec')
-        if (!hasExec) hasExec = !!getExec(textEditor.document.languageId)
-        void vscode.commands.executeCommand('setContext', `terminal-code-runner.runButton`, hasExec)
+        void vscode.commands.executeCommand('setContext', `terminal-code-runner.runButton`, getHasExec(textEditor))
     }
 
     vscode.window.onDidChangeActiveTextEditor(checkDisplayRunButton)
@@ -20,41 +17,49 @@ export const activate = () => {
     registerExtensionCommand('runFile', async () => {
         const activeEditor = vscode.window.activeTextEditor
         if (!activeEditor || activeEditor.viewColumn === undefined) return
+        
+        let exec = getExec(activeEditor)
+        if (!exec) {
+            void vscode.window.showWarningMessage(`No matched exec command!`)
+            return
+        }
+
         const { document } = activeEditor
         const { fsPath } = document.uri
         const fileDir = dirname(fsPath)
         const fileName = basename(fsPath)
         const workspaceRoot = vscode.workspace.getWorkspaceFolder(document.uri)
-        const exec = (getExec(document.languageId) ?? getExtensionSetting('defaultExec'))
-            ?.replace(/\$workspaceRoot/g, workspaceRoot?.uri.fsPath ?? '')
+        exec = exec.replace(/\$workspaceRoot/g, workspaceRoot?.uri.fsPath ?? '')
             .replace(/\$fileName/, fileName)
             .replace(/\$dir/, fileDir)
             .replace(/\$path/, fsPath)
-        if (!exec) {
-            void vscode.window.showWarningMessage(`No exec command for language ${document.languageId} is set`)
-            return
-        }
 
-        const writeEmitter = new vscode.EventEmitter<string>()
-        const line = ''
+        // Uses different terminals for each file
         const terminal =
             activeTerminals.get(fsPath) ??
             vscode.window.createTerminal({
                 name: `Runner: ${fileName}`,
                 cwd: getExtensionSetting('terminalCwd') === 'file' ? fileDir : undefined,
             })
-        // vscode will never fix this arg
         terminal.show()
+        
+        // https://github.com/formulahendry/vscode-code-runner/issues/715
         if (getExtensionSetting('focusOnEditor'))
             setTimeout(() => {
                 void vscode.commands.executeCommand('workbench.action.focusActiveEditorGroup')
             }, 150)    
+        
+        // save file
         const saveFileSetting = getExtensionSetting('saveFile')
         if (saveFileSetting === 'all') await vscode.commands.executeCommand('workbench.action.files.saveAll')
         if (saveFileSetting === 'onlyActive') await vscode.commands.executeCommand('workbench.action.files.save')
 
+        // run
         terminal.sendText(exec)
+
+        // clear terminal
         if (getExtensionSetting('clearTerminal')) await vscode.commands.executeCommand('workbench.action.terminal.clear')
+
         activeTerminals.set(fsPath, terminal)
     })
 
@@ -67,9 +72,36 @@ export const activate = () => {
     })
 }
 
-const getExec = (languageId: string) => {
+const getExecByGlob = (doc: vscode.TextDocument) => {
+    const globMap = getExtensionSetting('executorMapByGlob')
+    for (const pattern of Object.keys(globMap)) 
+        if (vscode.languages.match({ pattern }, doc))
+            return globMap[pattern]
+    
+    return undefined
+}
+
+const getExecByLanguageId = (languageId: string) => {
     const map = getExtensionSetting('execMap')
     let execString = map[languageId]
     if (!execString && jsLangs.includes(languageId)) execString = map.js
     return execString
+}
+
+const getHasExec = (textEditor: vscode.TextEditor | undefined) => {
+    if (!textEditor || textEditor.viewColumn === undefined) return
+    return Boolean(
+        getExtensionSetting('defaultExec') ??
+        getExecByGlob(textEditor.document) ??
+        getExecByLanguageId(textEditor.document.languageId),
+    )
+}
+
+const getExec = (textEditor: vscode.TextEditor | undefined) => {
+    if (!textEditor || textEditor.viewColumn === undefined) return
+    return (
+        getExecByGlob(textEditor.document) ??
+        getExecByLanguageId(textEditor.document.languageId) ??
+        getExtensionSetting('defaultExec')
+    )
 }

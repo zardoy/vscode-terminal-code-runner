@@ -13,11 +13,22 @@
             "properties": {
                 "execMap": {
                     "type": "object",
+                    "markdownDescription": "Set the executor by [language id](https://code.visualstudio.com/docs/languages/identifiers)",
                     "additionalProperties": {
                         "type": "string"
                     },
                     "default": {
                         "js": "tsm $path"
+                    }
+                },
+                "executorMapByGlob": {
+                    "type": "object",
+                    "description": "Set the executor by [globs](https://code.visualstudio.com/api/references/vscode-api#GlobPattern)",
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "default": {
+                        "**/*.scpt": "osascript $fileName"
                     }
                 },
                 "installExecMap": {
