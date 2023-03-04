@@ -1,5 +1,5 @@
 /* eslint-disable no-template-curly-in-string, @typescript-eslint/no-explicit-any */
- 
+
 import { homedir } from 'node:os'
 import path from 'node:path'
 import process from 'node:process'
@@ -8,15 +8,14 @@ import vscode, { Uri } from 'vscode'
 
 /**
  * code migrated from: https://github.com/tjx666/open-in-external-app/blob/master/src/parseVariables.ts
- * 
+ *
  * @see https://code.visualstudio.com/docs/editor/variables-reference
  */
 export async function parseVariables(str: string, activeFile: Uri) {
-    const replacement: Map<string | RegExp, string | ((substring: string, ...args: any[]) => string) | undefined> =
-        new Map([
-            ['${userHome}', homedir()],
-            ['${pathSeparator}', path.sep],
-        ])
+    const replacement: Map<string | RegExp, string | ((substring: string, ...args: any[]) => string) | undefined> = new Map([
+        ['${userHome}', homedir()],
+        ['${pathSeparator}', path.sep],
+    ])
 
     const { workspaceFolders } = vscode.workspace
     if (workspaceFolders?.length) {
@@ -35,12 +34,11 @@ export async function parseVariables(str: string, activeFile: Uri) {
 
     let relativeFilePath: string | undefined
     if (absoluteFilePath && activeWorkspace) {
-        relativeFilePath = absoluteFilePath.replace(activeWorkspace.uri.fsPath, '').slice(path.sep.length)
+        relativeFilePath = activeWorkspace ? path.relative(activeWorkspace.uri.fsPath, absoluteFilePath) : absoluteFilePath
         replacement.set('${relativeFile}', relativeFilePath)
     }
 
-    if (relativeFilePath) 
-        replacement.set('${relativeFileDirname}', relativeFilePath.slice(0, relativeFilePath.lastIndexOf(path.sep)))
+    if (relativeFilePath) replacement.set('${relativeFileDirname}', relativeFilePath.slice(0, relativeFilePath.lastIndexOf(path.sep)))
 
     if (absoluteFilePath) {
         const parsedPath = path.parse(absoluteFilePath)
@@ -57,27 +55,17 @@ export async function parseVariables(str: string, activeFile: Uri) {
         replacement.set('${cursorLineNumber}', String(cursorPosition.line + 1))
         replacement.set('${cursorColumnNumber}', String(cursorPosition.character + 1))
 
-        replacement.set(
-            '${selectedText}',
-            activeTextEditor.document.getText(
-                new vscode.Range(activeTextEditor.selection.start, activeTextEditor.selection.end),
-            ),
-        )
+        replacement.set('${selectedText}', activeTextEditor.document.getText(activeTextEditor.selection))
     }
 
     replacement.set(/\${env:(.*?)}/g, (...captures) => process.env[captures[1]] ?? captures[0])
-    replacement.set(/\${config:(.*?)}/g, (...captures) =>
-        vscode.workspace.getConfiguration().get(captures[1], captures[0]),
-    )
+    replacement.set(/\${config:(.*?)}/g, (...captures) => vscode.workspace.getConfiguration().get(captures[1], captures[0]))
 
     const replacementEntries = [...replacement.entries()].filter(([_, r]) => r !== undefined)
     for (const [search, replacer] of replacementEntries) {
         const typeofReplacer = typeof replacer
-        if (typeofReplacer === 'string') 
-            str = str.replaceAll(search, replacer as string)
-         else if (typeofReplacer === 'function') 
-            str = str.replaceAll(search as RegExp, replacer as any)
-        
+        if (typeofReplacer === 'string') str = str.replaceAll(search, replacer as string)
+        else if (typeofReplacer === 'function') str = str.replaceAll(search as RegExp, replacer as any)
     }
 
     return str
