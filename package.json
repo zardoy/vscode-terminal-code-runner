@@ -33,8 +33,15 @@
                     }
                 },
                 "defaultExec": {
-                    "type": "string",
-                    "default": ""
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null
                 },
                 "terminalCwd": {
                     "type": "string",
