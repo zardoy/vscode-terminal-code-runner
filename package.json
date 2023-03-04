@@ -84,7 +84,7 @@
             "editor/title": [
                 {
                     "when": "terminal-code-runner.runButton",
-                    "group": "navigation",
+                    "group": "navigation@-1",
                     "command": "runFile"
                 }
             ]
