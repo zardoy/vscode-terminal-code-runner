@@ -18,7 +18,8 @@
                         "type": "string"
                     },
                     "default": {
-                        "js": "tsm $path"
+                        "javascript": "node $path",
+                        "typescript": "tsx $path"
                     }
                 },
                 "executorMapByGlob": {
@@ -29,16 +30,6 @@
                     },
                     "default": {
                         "**/*.scpt": "osascript $fileName"
-                    }
-                },
-                "installExecMap": {
-                    "type": "object",
-                    "deprecationMessage": "Not implemented",
-                    "additionalProperties": {
-                        "type": "string"
-                    },
-                    "default": {
-                        "js": "pnpm i -g tsm || npm i -g tsm"
                     }
                 },
                 "defaultExec": {

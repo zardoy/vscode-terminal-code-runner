@@ -1,7 +1,6 @@
 import { dirname, basename } from 'path'
 import * as vscode from 'vscode'
 import { getExtensionSetting, registerExtensionCommand, } from 'vscode-framework'
-import { jsLangs } from './util'
 
 export const activate = () => {
     type FsPath = string
@@ -82,14 +81,12 @@ const getExecByGlob = (doc: vscode.TextDocument) => {
 }
 
 const getExecByLanguageId = (languageId: string) => {
-    const map = getExtensionSetting('execMap')
-    let execString = map[languageId]
-    if (!execString && jsLangs.includes(languageId)) execString = map.js
-    return execString
+    const execMap = getExtensionSetting('execMap')
+    return execMap[languageId]
 }
 
 const getHasExec = (textEditor: vscode.TextEditor | undefined) => {
-    if (!textEditor || textEditor.viewColumn === undefined) return
+    if (!textEditor || textEditor.viewColumn === undefined) return false
     return Boolean(
         getExtensionSetting('defaultExec') ??
         getExecByGlob(textEditor.document) ??

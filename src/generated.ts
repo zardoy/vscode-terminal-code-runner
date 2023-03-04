@@ -17,10 +17,9 @@ interface Configuration {
     /**
      * Focus on editor whenever the file is run instead of terminal
      */
-    focusOnEditor?:  boolean;
-    installExecMap?: { [key: string]: string };
-    saveFile?:       "all" | "disabled" | "onlyActive";
-    terminalCwd?:    "file" | "workspace";
+    focusOnEditor?: boolean;
+    saveFile?:      "all" | "disabled" | "onlyActive";
+    terminalCwd?:   "file" | "workspace";
 }
 
 export {}
