@@ -20,7 +20,7 @@ export const activate = () => {
         if (!textEditor || textEditor.viewColumn === undefined) return
         let hasExec = !!getExtensionSetting('defaultExec')
         if (!hasExec) hasExec = !!getExec(textEditor.document.languageId)
-        void vscode.commands.executeCommand('setContext', `terminal-code-runner.runBututon`, hasExec)
+        void vscode.commands.executeCommand('setContext', `terminal-code-runner.runButton`, hasExec)
     }
 
     vscode.window.onDidChangeActiveTextEditor(checkRunButton)
