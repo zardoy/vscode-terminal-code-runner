@@ -1,18 +1,9 @@
 import { dirname, basename } from 'path'
 import * as vscode from 'vscode'
-// import ansiEscapes from 'ansi-escapes'
 import { getExtensionSetting, registerExtensionCommand, } from 'vscode-framework'
 import { jsLangs } from './util'
 
 export const activate = () => {
-    // registerExtensionCommand('runWithSideCode', async () => {
-    //     const activeEditor = vscode.window.activeTextEditor
-    //     if (!activeEditor || activeEditor.viewColumn === undefined) return
-    //     await vscode.window.showTextDocument(vscode.Uri.parse(`${documentScheme}:${activeEditor.document.uri.toString(true)}`), {
-    //         preview: false,
-    //         viewColumn: vscode.ViewColumn.Beside,
-    //     })
-    // })
     type FsPath = string
     const activeTerminals = new Map<FsPath, vscode.Terminal>()
 
@@ -51,34 +42,6 @@ export const activate = () => {
             vscode.window.createTerminal({
                 name: `Runner: ${fileName}`,
                 cwd: getExtensionSetting('terminalCwd') === 'file' ? fileDir : undefined,
-                // pty: {
-                //     onDidWrite: writeEmitter.event,
-                //     open: () => writeEmitter.fire('Type and press enter to echo the text\r\n\r\n'),
-                //     close: () => {},
-                //     handleInput: (data: string) => {
-                //         // https://gist.github.com/fnky/458719343aabd01cfb17a3a4f7296797#general-ascii-codes
-                //         const codes = {
-                //             backspace: 127,
-                //             //
-                //             ctrlBackspace: 23,
-                //             del: 27,
-                //         }
-                //         if (data.codePointAt(0) === 127) {
-                //             // backspace
-                //             writeEmitter.fire(`\b${ansiEscapes.eraseEndLine}`)
-                //             return
-                //         }
-
-                //         if (data === '\r') {
-                //             writeEmitter.fire(`\r\necho: "${line}"\r\n\n`)
-                //             line = ''
-                //         } else {
-                //             console.log('data', data.codePointAt(0))
-                //             line += data
-                //             writeEmitter.fire(data)
-                //         }
-                //     },
-                // },
             })
         // vscode will never fix this arg
         terminal.show()

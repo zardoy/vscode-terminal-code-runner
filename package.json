@@ -67,10 +67,6 @@
                 "command": "runFile",
                 "title": "Run File",
                 "icon": "$(play)"
-            },
-            {
-                "command": "runWithSideCode",
-                "title": "Run with Side Code"
             }
         ],
         "menus": {

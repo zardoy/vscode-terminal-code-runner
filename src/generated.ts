@@ -1,7 +1,6 @@
 declare module 'vscode-framework' {
     interface RegularCommands {
         "runFile": true
-        "runWithSideCode": true
     }
     interface Settings extends Required<Configuration> {}
 }
