@@ -13,18 +13,18 @@
             "properties": {
                 "execMap": {
                     "type": "object",
-                    "markdownDescription": "Set the executor by [language id](https://code.visualstudio.com/docs/languages/identifiers)",
+                    "markdownDescription": "Set the executor by [language id](https://code.visualstudio.com/docs/languages/identifiers), support [VSCode Variables](https://code.visualstudio.com/docs/editor/variables-reference)",
                     "additionalProperties": {
                         "type": "string"
                     },
                     "default": {
-                        "javascript": "node $path",
-                        "typescript": "tsx $path"
+                        "javascript": "node ${file}",
+                        "typescript": "tsx ${file}"
                     }
                 },
                 "executorMapByGlob": {
                     "type": "object",
-                    "description": "Set the executor by [globs](https://code.visualstudio.com/api/references/vscode-api#GlobPattern)",
+                    "markdownDescription": "Set the executor by [globs](https://code.visualstudio.com/api/references/vscode-api#GlobPattern), support [VSCode Variables](https://code.visualstudio.com/docs/editor/variables-reference)",
                     "additionalProperties": {
                         "type": "string"
                     },
@@ -104,7 +104,7 @@
         "@zardoy/tsconfig": "^1.2.2",
         "eslint": "^8.6.0",
         "eslint-config-zardoy": "^0.2.4",
-        "typescript": "^4.5.4"
+        "typescript": "^4.9.5"
     },
     "dependencies": {
         "vscode-framework": "^0.0.18"

@@ -1,6 +1,7 @@
-import { dirname, basename } from 'path'
+import { dirname, basename } from 'node:path'
 import * as vscode from 'vscode'
 import { getExtensionSetting, registerExtensionCommand, } from 'vscode-framework'
+import { parseVariables } from './utils'
 
 export const activate = () => {
     type FsPath = string
@@ -27,11 +28,7 @@ export const activate = () => {
         const { fsPath } = document.uri
         const fileDir = dirname(fsPath)
         const fileName = basename(fsPath)
-        const workspaceRoot = vscode.workspace.getWorkspaceFolder(document.uri)
-        exec = exec.replace(/\$workspaceRoot/g, workspaceRoot?.uri.fsPath ?? '')
-            .replace(/\$fileName/, fileName)
-            .replace(/\$dir/, fileDir)
-            .replace(/\$path/, fsPath)
+        exec = await parseVariables(exec, document.uri)
 
         // Uses different terminals for each file
         const terminal =

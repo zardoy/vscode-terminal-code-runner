@@ -6,13 +6,9 @@ declare module 'vscode-framework' {
 }
 
 interface Configuration {
-    clearTerminal?: boolean;
-    defaultExec?:   string;
-    execMap?:       { [key: string]: string };
-    /**
-     * Set the executor by
-     * [globs](https://code.visualstudio.com/api/references/vscode-api#GlobPattern)
-     */
+    clearTerminal?:     boolean;
+    defaultExec?:       string;
+    execMap?:           { [key: string]: string };
     executorMapByGlob?: { [key: string]: string };
     /**
      * Focus on editor whenever the file is run instead of terminal
