@@ -1,12 +1,15 @@
-name: VSCode Release
+name: Pull Request CI
 on:
-  push:
-    branches: [main]
+  pull_request:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  release:
-    runs-on: ubuntu-latest
+  test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+      fail-fast: true
+    timeout-minutes: 30
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v2
       - run: npx prettier --check src/**
@@ -23,8 +26,4 @@ jobs:
           run_install: |
             args: [--frozen-lockfile, --strict-peer-dependencies]
       - run: pnpm lint
-      - run: pnpx zardoy-release vscode-extension
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
-          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+      - run: pnpm build
