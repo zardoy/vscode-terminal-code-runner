@@ -1,7 +1,7 @@
 import { dirname, basename } from 'path'
 import * as vscode from 'vscode'
-import ansiEscapes from 'ansi-escapes'
-import { getExtensionSetting, registerExtensionCommand } from 'vscode-framework'
+// import ansiEscapes from 'ansi-escapes'
+import { getExtensionSetting, registerExtensionCommand, } from 'vscode-framework'
 import { jsLangs } from './util'
 
 export const activate = () => {
@@ -16,15 +16,15 @@ export const activate = () => {
     type FsPath = string
     const activeTerminals = new Map<FsPath, vscode.Terminal>()
 
-    const checkRunButton = (textEditor: vscode.TextEditor | undefined): void => {
+    const checkDisplayRunButton = (textEditor: vscode.TextEditor | undefined): void => {
         if (!textEditor || textEditor.viewColumn === undefined) return
         let hasExec = !!getExtensionSetting('defaultExec')
         if (!hasExec) hasExec = !!getExec(textEditor.document.languageId)
         void vscode.commands.executeCommand('setContext', `terminal-code-runner.runButton`, hasExec)
     }
 
-    vscode.window.onDidChangeActiveTextEditor(checkRunButton)
-    checkRunButton(vscode.window.activeTextEditor)
+    vscode.window.onDidChangeActiveTextEditor(checkDisplayRunButton)
+    checkDisplayRunButton(vscode.window.activeTextEditor)
 
     registerExtensionCommand('runFile', async () => {
         const activeEditor = vscode.window.activeTextEditor
@@ -85,7 +85,7 @@ export const activate = () => {
         if (getExtensionSetting('focusOnEditor'))
             setTimeout(() => {
                 void vscode.commands.executeCommand('workbench.action.focusActiveEditorGroup')
-            }, 150)
+            }, 150)    
         const saveFileSetting = getExtensionSetting('saveFile')
         if (saveFileSetting === 'all') await vscode.commands.executeCommand('workbench.action.files.saveAll')
         if (saveFileSetting === 'onlyActive') await vscode.commands.executeCommand('workbench.action.files.save')
