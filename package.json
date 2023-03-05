@@ -77,7 +77,7 @@
                         "Use different terminals for each file"
                     ],
                     "description": "Which terminal to use to run file",
-                    "default": false
+                    "default": "file"
                 }
             }
         },
