@@ -31,9 +31,9 @@ export const activate = () => {
         exec = parseVariables(exec, document.uri)
 
         // Uses different terminals for each file
-        const isDifferentTerminalsForEachFile = getExtensionSetting('differentTerminalsForEachFile')
-        const terminalKey = isDifferentTerminalsForEachFile ? fsPath : '--Reused Terminal--'
-        const terminalName = isDifferentTerminalsForEachFile ? `Runner: ${fileName}` : `Run Code`
+        const executeInTerminal = getExtensionSetting('executeInTerminal')
+        const terminalKey = executeInTerminal === 'file' ? fsPath : 'Shared Code Runner'
+        const terminalName = executeInTerminal === 'file' ? `Runner: ${fileName}` : `Run Code`
         const terminal =
             activeTerminals.get(terminalKey) ??
             vscode.window.createTerminal({

@@ -66,9 +66,17 @@
                     ],
                     "default": "onlyActive"
                 },
-                "differentTerminalsForEachFile": {
-                    "type": "boolean",
-                    "description": "Uses different terminals for each file",
+                "executeInTerminal": {
+                    "type": "string",
+                    "enum": [
+                        "shared",
+                        "file"
+                    ],
+                    "enumDescriptions": [
+                        "Use shared extension terminal for different files",
+                        "Use different terminals for each file"
+                    ],
+                    "description": "Which terminal to use to run file",
                     "default": false
                 }
             }

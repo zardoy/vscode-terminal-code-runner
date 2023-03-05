@@ -12,6 +12,8 @@ import vscode, { Uri } from 'vscode'
  * @see https://code.visualstudio.com/docs/editor/variables-reference
  */
 export function parseVariables(str: string, activeFile: Uri) {
+    str = str.replaceAll('$path', '${relativeFile}')
+
     const replacement: Map<string | RegExp, string | ((substring: string, ...args: any[]) => string) | undefined> = new Map([
         ['${userHome}', homedir()],
         ['${pathSeparator}', path.sep],
