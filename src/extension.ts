@@ -57,7 +57,8 @@ export const activate = () => {
         if (getExtensionSetting('clearTerminal')) {
             // eslint-disable-next-line unicorn/prefer-ternary
             if (process.platform === 'win32') {
-                // https://github.com/microsoft/vscode/issues/75141#issuecomment-1367586528
+                // fix for https://github.com/formulahendry/vscode-code-runner/issues/704 and https://github.com/formulahendry/vscode-code-runner/issues/506
+                // from https://github.com/microsoft/vscode/issues/75141#issuecomment-1367586528
                 await vscode.commands.executeCommand('workbench.action.terminal.sendSequence', { text: 'cls \u000D' })
             } else {
                 await vscode.commands.executeCommand('workbench.action.terminal.clear')

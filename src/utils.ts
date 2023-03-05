@@ -20,11 +20,10 @@ export function parseVariables(str: string, activeFile: Uri) {
     ])
 
     const { workspaceFolders } = vscode.workspace
-    if (workspaceFolders?.length) {
-        const workspaceFolder = workspaceFolders[0]!
-        replacement.set('${workspaceFolder}', workspaceFolder.uri.fsPath)
-        replacement.set('${workspaceFolderBasename}', workspaceFolder.name)
-    }
+
+    const workspaceFolder = workspaceFolders?.[0]
+    replacement.set('${workspaceFolder}', workspaceFolder?.uri.fsPath ?? '')
+    replacement.set('${workspaceFolderBasename}', workspaceFolder?.name ?? '')
 
     const { activeTextEditor } = vscode.window
     const absoluteFilePath = activeFile.fsPath
@@ -34,21 +33,16 @@ export function parseVariables(str: string, activeFile: Uri) {
     replacement.set('${fileWorkspaceFolder}', activeWorkspace?.uri.fsPath)
     replacement.set('${cwd}', activeWorkspace?.uri.fsPath)
 
-    let relativeFilePath: string | undefined
-    if (absoluteFilePath && activeWorkspace) {
-        relativeFilePath = activeWorkspace ? path.relative(activeWorkspace.uri.fsPath, absoluteFilePath) : absoluteFilePath
-        replacement.set('${relativeFile}', relativeFilePath)
-    }
+    const relativeFilePath = activeWorkspace ? path.relative(activeWorkspace.uri.fsPath, absoluteFilePath) : absoluteFilePath
+    replacement.set('${relativeFile}', relativeFilePath ?? absoluteFilePath)
 
     if (relativeFilePath) replacement.set('${relativeFileDirname}', relativeFilePath.slice(0, relativeFilePath.lastIndexOf(path.sep)))
 
-    if (absoluteFilePath) {
-        const parsedPath = path.parse(absoluteFilePath)
-        replacement.set('${fileBasename}', parsedPath.base)
-        replacement.set('${fileBasenameNoExtension}', parsedPath.name)
-        replacement.set('${fileExtname}', parsedPath.ext)
-        replacement.set('${fileDirname}', parsedPath.dir)
-    }
+    const parsedPath = path.parse(absoluteFilePath)
+    replacement.set('${fileBasename}', parsedPath.base)
+    replacement.set('${fileBasenameNoExtension}', parsedPath.name)
+    replacement.set('${fileExtname}', parsedPath.ext)
+    replacement.set('${fileDirname}', parsedPath.dir)
 
     if (activeTextEditor) {
         replacement.set('${lineNumber}', String(activeTextEditor.selection.start.line + 1))
