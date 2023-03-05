@@ -32,8 +32,8 @@ export const activate = () => {
 
         // Uses different terminals for each file
         const executeInTerminal = getExtensionSetting('executeInTerminal')
-        const terminalKey = executeInTerminal === 'file' ? fsPath : 'Shared Code Runner'
-        const terminalName = executeInTerminal === 'file' ? `Runner: ${fileName}` : `Run Code`
+        const terminalKey = executeInTerminal === 'file' ? fsPath : '--Reused Terminal--'
+        const terminalName = executeInTerminal === 'file' ? `Runner: ${fileName}` : `Shared Runner`
         const terminal =
             activeTerminals.get(terminalKey) ??
             vscode.window.createTerminal({
