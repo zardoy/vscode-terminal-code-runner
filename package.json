@@ -13,26 +13,32 @@
             "properties": {
                 "execMap": {
                     "type": "object",
+                    "markdownDescription": "Set the executor by [language id](https://code.visualstudio.com/docs/languages/identifiers), support [VSCode Variables](https://code.visualstudio.com/docs/editor/variables-reference)",
                     "additionalProperties": {
                         "type": "string"
                     },
                     "default": {
-                        "js": "tsm $path"
+                        "javascript": "node ${relativeFile}"
                     }
                 },
-                "installExecMap": {
+                "executorMapByGlob": {
                     "type": "object",
-                    "deprecationMessage": "Not implemented",
+                    "markdownDescription": "Set the executor by [globs](https://code.visualstudio.com/api/references/vscode-api#GlobPattern), support [VSCode Variables](https://code.visualstudio.com/docs/editor/variables-reference)",
                     "additionalProperties": {
                         "type": "string"
                     },
-                    "default": {
-                        "js": "pnpm i -g tsm || npm i -g tsm"
-                    }
+                    "default": {}
                 },
                 "defaultExec": {
-                    "type": "string",
-                    "default": ""
+                    "anyOf": [
+                        {
+                            "type": "string"
+                        },
+                        {
+                            "type": "null"
+                        }
+                    ],
+                    "default": null
                 },
                 "terminalCwd": {
                     "type": "string",
@@ -59,6 +65,19 @@
                         "all"
                     ],
                     "default": "onlyActive"
+                },
+                "executeInTerminal": {
+                    "type": "string",
+                    "enum": [
+                        "shared",
+                        "file"
+                    ],
+                    "enumDescriptions": [
+                        "Use shared extension terminal for different files",
+                        "Use different terminals for each file"
+                    ],
+                    "description": "Which terminal to use to run file",
+                    "default": "file"
                 }
             }
         },
@@ -67,29 +86,25 @@
                 "command": "runFile",
                 "title": "Run File",
                 "icon": "$(play)"
-            },
-            {
-                "command": "runWithSideCode",
-                "title": "Run with Side Code"
             }
         ],
         "menus": {
             "editor/title": [
                 {
-                    "when": "terminal-code-runner.runBututon",
-                    "group": "navigation",
+                    "when": "terminal-code-runner.runButton",
+                    "group": "navigation@-1",
                     "command": "runFile"
                 }
             ]
         }
     },
     "activationEvents": [
-        "*"
+        "onStartupFinished"
     ],
     "capabilities": {
         "untrustedWorkspaces": {
             "supported": false,
-            "description": "Running arbirtrary code available only in trusted workspaces"
+            "description": "Running arbitrary code available only in trusted workspaces"
         },
         "virtualWorkspaces": {
             "supported": false,
@@ -107,11 +122,9 @@
         "@zardoy/tsconfig": "^1.2.2",
         "eslint": "^8.6.0",
         "eslint-config-zardoy": "^0.2.4",
-        "typescript": "^4.5.4"
+        "typescript": "^4.9.5"
     },
     "dependencies": {
-        "ansi-escapes": "^5.0.0",
-        "execa": "^6.0.0",
         "vscode-framework": "^0.0.18"
     },
     "prettier": {
