@@ -53,27 +53,41 @@ export const activate = () => {
         if (saveFileSetting === 'all') await vscode.commands.executeCommand('workbench.action.files.saveAll')
         if (saveFileSetting === 'onlyActive') await vscode.commands.executeCommand('workbench.action.files.save')
 
+        // clear terminal
+        if (getExtensionSetting('clearTerminal')) {
+            // eslint-disable-next-line unicorn/prefer-ternary
+            if (process.platform === 'win32') {
+                // https://github.com/microsoft/vscode/issues/75141#issuecomment-1367586528
+                await vscode.commands.executeCommand('workbench.action.terminal.sendSequence', { text: 'cls \u000D' })
+            } else {
+                await vscode.commands.executeCommand('workbench.action.terminal.clear')
+            }
+        }
+
         // run
         terminal.sendText(exec)
-
-        // clear terminal
-        if (getExtensionSetting('clearTerminal')) await vscode.commands.executeCommand('workbench.action.terminal.clear')
 
         activeTerminals.set(terminalKey, terminal)
     })
 
     vscode.window.onDidCloseTerminal(hiddenTerminal => {
-        for (const [fsPath, terminal] of activeTerminals.entries())
+        for (const [fsPath, terminal] of activeTerminals.entries()) {
             if (hiddenTerminal === terminal) {
                 activeTerminals.delete(fsPath)
                 break
             }
+        }
     })
 }
 
 const getExecByGlob = (doc: vscode.TextDocument) => {
     const globMap = getExtensionSetting('executorMapByGlob')
-    for (const pattern of Object.keys(globMap)) if (vscode.languages.match({ pattern }, doc)) return globMap[pattern]
+    for (const pattern of Object.keys(globMap)) {
+        if (vscode.languages.match({ pattern }, doc)) {
+            return globMap[pattern]
+        }
+    }
+
     return undefined
 }
 
