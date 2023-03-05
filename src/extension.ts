@@ -28,7 +28,7 @@ export const activate = () => {
         const { fsPath } = document.uri
         const fileDir = dirname(fsPath)
         const fileName = basename(fsPath)
-        exec = await parseVariables(exec, document.uri)
+        exec = parseVariables(exec, document.uri)
 
         // Uses different terminals for each file
         const isDifferentTerminalsForEachFile = getExtensionSetting('differentTerminalsForEachFile')
