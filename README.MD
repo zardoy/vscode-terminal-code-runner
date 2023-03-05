@@ -30,7 +30,7 @@ You can also configure the executed command by [globs](https://code.visualstudio
 ```jsonc
 {
     "terminalCodeRunner.executorMapByGlob": {
-        // $relativeFile is VSCode variables, will fallback to file absolute path if no workspace opened
+        // ${relativeFile} is VSCode variables, will fallback to file absolute path if no workspace opened
         // check all variables here: https://code.visualstudio.com/docs/editor/variables-reference
         "**/*.scpt": "osascript ${relativeFile}"
     }
