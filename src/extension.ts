@@ -20,7 +20,7 @@ export const activate = () => {
 
         let exec = getExec(activeEditor)
         if (!exec) {
-            void vscode.window.showWarningMessage(`No matched exec command!`)
+            void vscode.window.showWarningMessage(`No matched exec command for language ${activeEditor.document.languageId}!`)
             return
         }
 
@@ -102,7 +102,6 @@ const getHasExec = (textEditor: vscode.TextEditor | undefined) => {
     return Boolean(getExtensionSetting('defaultExec') ?? getExecByGlob(textEditor.document) ?? getExecByLanguageId(textEditor.document.languageId))
 }
 
-const getExec = (textEditor: vscode.TextEditor | undefined) => {
-    if (!textEditor || textEditor.viewColumn === undefined) return
+const getExec = (textEditor: vscode.TextEditor) => {
     return getExecByGlob(textEditor.document) ?? getExecByLanguageId(textEditor.document.languageId) ?? getExtensionSetting('defaultExec')
 }
