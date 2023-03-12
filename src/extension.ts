@@ -102,6 +102,5 @@ const getHasExec = (textEditor: vscode.TextEditor | undefined) => {
     return Boolean(getExtensionSetting('defaultExec') ?? getExecByGlob(textEditor.document) ?? getExecByLanguageId(textEditor.document.languageId))
 }
 
-const getExec = (textEditor: vscode.TextEditor) => {
-    return getExecByGlob(textEditor.document) ?? getExecByLanguageId(textEditor.document.languageId) ?? getExtensionSetting('defaultExec')
-}
+const getExec = (textEditor: vscode.TextEditor) =>
+    getExecByGlob(textEditor.document) ?? getExecByLanguageId(textEditor.document.languageId) ?? getExtensionSetting('defaultExec')
