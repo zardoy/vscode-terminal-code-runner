@@ -55,6 +55,7 @@
                 },
                 "clearTerminal": {
                     "type": "boolean",
+                    "description": "Whether to clear previous output before each run.",
                     "default": false
                 },
                 "saveFile": {

@@ -6,7 +6,8 @@ Why this instead of Code Runner:
 
 - Support use different terminals for each file
 - No [Conflict with Output Colorizer](https://github.com/formulahendry/vscode-code-runner/issues/59)
-- [`preserveFocus` just works](https://github.com/formulahendry/vscode-code-runner/issues/715)
+- [`preserveFocus` just works](https://github.com/formulahendry/vscode-code-runner/issues/715) - enable `focusOnEditor` setting
+- [`clearPreviousOutput` works on Windows](https://github.com/formulahendry/vscode-code-runner/issues/704) - enable `clearTerminal` setting
 
 ## Configuration
 
